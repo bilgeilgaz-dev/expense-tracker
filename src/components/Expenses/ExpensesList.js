@@ -1,33 +1,42 @@
+import { useState } from "react";
 import ExpenseItem from "./ExpenseItem.js";
-import Card from '../UI/Card';
-import './ExpensesList.css';
+import Card from "../UI/Card";
+import "./ExpensesList.css";
+import ExpensesFilter from "./ExpensesFilter.js";
 
-function ExpensesList (props) {
-    return (
-        <Card className="expenses">
+function ExpensesList(props) {
+  const [filteredYear, setFilteredYear] = useState("2020");
+
+  const selectFilterYear = (year) => {
+    console.log("year", year);
+    setFilteredYear(year);
+    console.log("filteredYear", filteredYear);
+  };
+
+  const filteredExpenses = props.expenses.filter(
+    (expense) => expense.date.getFullYear().toString() === filteredYear
+  );
+
+  return (
+    <div>
+      <Card className="expenses">
+        <ExpensesFilter
+          onFilterYear={selectFilterYear}
+          selectedYear={filteredYear}
+        />
+        {filteredExpenses.length === 0 && <p>No expenses found.</p>}
+        {filteredExpenses.length > 0 &&
+          filteredExpenses.map((expense, index) => (
             <ExpenseItem
-                title={props.expenses[0].title}
-                amount={props.expenses[0].amount}
-                date={props.expenses[0].date}
+              title={expense.title}
+              amount={expense.amount}
+              date={expense.date}
+              key={index}
             />
-            <ExpenseItem
-                title={props.expenses[1].title}
-                amount={props.expenses[1].amount}
-                date={props.expenses[1].date}
-            />
-            <ExpenseItem
-                title={props.expenses[2].title}
-                amount={props.expenses[2].amount}
-                date={props.expenses[2].date}
-            />
-            <ExpenseItem
-                title={props.expenses[3].title}
-                amount={props.expenses[3].amount}
-                date={props.expenses[3].date}
-            />
-        </Card>
-    )
+          ))}
+      </Card>
+    </div>
+  );
 }
 
 export default ExpensesList;
-
