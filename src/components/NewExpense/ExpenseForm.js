@@ -11,6 +11,7 @@ const ExpenseForm = (props) => {
     const [enteredTitle, setEnteredTitle] = useState('');
     const [enteredAmount, setEnteredAmount] = useState('');
     const [enteredDate, setEnteredDate] = useState('');
+    const [isFormExpanded, setFormExtended] = useState('');
 
     const changeTitle = (event) => {
         setEnteredTitle(event.target.value);
@@ -51,41 +52,61 @@ const ExpenseForm = (props) => {
         setEnteredTitle('');
         setEnteredAmount('');
         setEnteredDate('');
+        setFormExtended(false);
     };
+    console.log('isFormExpanded', isFormExpanded);
 
-    return <form onSubmit={submitForm}>
-        <div className='new-expense__controls'>
-            <div className='new-expense__control'>
-                <label>Title</label>
-                <input 
-                    type="text" 
-                    value={enteredTitle} 
-                    onChange={changeTitle}
-                />
+    const expandForm = () => {
+        setFormExtended(true);
+        console.log('clicked', isFormExpanded)
+    }
+
+    const cancelForm = () => {
+        setFormExtended(false);
+        console.log('clicked', isFormExpanded)
+    }
+
+    if(!isFormExpanded){
+        return <button onClick={expandForm}>Add new expense</button>
+    } else {
+        return <form onSubmit={submitForm}>
+            <div className='new-expense__controls'>
+                <div className='new-expense__control'>
+                    <label>Title</label>
+                    <input 
+                        type="text" 
+                        value={enteredTitle} 
+                        onChange={changeTitle}
+                    />
+                </div>
+                <div className='new-expense__control'>
+                    <label>Amount</label>
+                    <input 
+                        type="number" 
+                        value={enteredAmount} 
+                        min="0.01" step="0.01" 
+                        onChange={changeAmount}
+                    />
+                </div>
+                <div className='new-expense__control'>
+                    <label>Date</label>
+                    <input 
+                        type="date" 
+                        value={enteredDate} 
+                        min="2019-01-01" 
+                        max="2022-12-31" 
+                        onChange={changeDate}
+                    />
+                </div>
             </div>
-            <div className='new-expense__control'>
-                <label>Amount</label>
-                <input 
-                    type="number" 
-                    value={enteredAmount} 
-                    min="0.01" step="0.01" 
-                    onChange={changeAmount}
-                />
+            <div className='new-expense__actions'>
+                <button onClick={cancelForm}>Cancel</button>
+                <button type="submit" >Add expense</button>
             </div>
-            <div className='new-expense__control'>
-                <label>Date</label>
-                <input 
-                    type="date" 
-                    value={enteredDate} 
-                    min="2019-01-01" 
-                    max="2022-12-31" 
-                    onChange={changeDate}
-                />
-            </div>
-        </div>
-        <div className='new-expense__actions'></div>
-        <button type="submit" >Add expense</button>
-    </form>
+        </form>
+    }
+
+    
 };
 
 export default ExpenseForm;
